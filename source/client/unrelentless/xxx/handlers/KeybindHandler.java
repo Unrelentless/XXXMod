@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
@@ -57,6 +58,8 @@ public class KeybindHandler extends KeyHandler
 		int zPos = (int)player.posZ;
 		int count = 1;
 		Iterator iterator;
+		int dir = MathHelper.floor_double((double)((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
+
 		if (FMLClientHandler.instance().getClient().inGameHasFocus){
 			for(int i=-8;i<=8; i++){
 				for(int j=-8;j<=8; j++){
@@ -68,6 +71,9 @@ public class KeybindHandler extends KeyHandler
 							zPos += k;
 							((EntityPlayer) player).addChatMessage("Diamonds at: "+xPos+","+yPos+","+zPos);
 						}else if(blockID == 4085-256 || blockID == 4085){
+							xPos += i;
+							yPos += j;
+							zPos += k;
 							((EntityPlayer) player).addChatMessage("Fossil at: " + xPos+","+ yPos+","+zPos);
 						}
 
@@ -92,25 +98,71 @@ public class KeybindHandler extends KeyHandler
 						NBTTagCompound compound = new NBTTagCompound();
 						thisEntity.writeToNBT(compound);
 
-/*						player.addChatMessage("Growth: " + compound.getShort("Growth"));
+						/*						player.addChatMessage("Growth: " + compound.getShort("Growth"));
 						player.addChatMessage("IsShiny: " + compound.getBoolean("IsShiny"));
 						player.addChatMessage("Level: " + compound.getInteger("Level"));
 						player.addChatMessage("BossMode: " + compound.getShort("BossMode"));
-*/
+						 */
 						if(compound.getBoolean("IsShiny")){	
-							player.addChatMessage("Shiny " +entityName +" at "+entityPosX+","+entityPosY+","+entityPosZ);
+							player.addChatMessage("Shiny " +entityName +" due: "+ checkDir(player, dir, entityPosX, entityPosZ) +"("+entityPosX+","+entityPosY+","+entityPosZ +")");
 						}else if(compound.getShort("BossMode")>0){
-							player.addChatMessage("Boss " +entityName +" at "+entityPosX+","+entityPosY+","+entityPosZ);
+							player.addChatMessage("Boss " +entityName +" due: "+ checkDir(player, dir, entityPosX, entityPosZ) +"("+entityPosX+","+entityPosY+","+entityPosZ +")");
 						}else if(compound.getShort("Growth")==6 || compound.getShort("Growth")==0){
-							player.addChatMessage("Pygmy/Enormous " +entityName +" at "+entityPosX+","+entityPosY+","+entityPosZ);
-						}else if(compound.getInteger("Level")>45){
-							player.addChatMessage("High Level " +entityName +" at "+entityPosX+","+entityPosY+","+entityPosZ);
+							player.addChatMessage("Pygmy/Enormous " +entityName +" due: "+ checkDir(player, dir, entityPosX, entityPosZ) +"("+entityPosX+","+entityPosY+","+entityPosZ +")");
+						}else if(compound.getInteger("Level")>48){
+							player.addChatMessage("High Level " +entityName +" due: "+ checkDir(player, dir, entityPosX, entityPosZ) +"("+entityPosX+","+entityPosY+","+entityPosZ +")");
 						}
-
 					}
 				}
 			}
 		}
+	}
+
+	public String checkDir(EntityPlayer player, int dir, int posX, int posZ){
+		switch(dir){
+		case 0: //South
+			if((int)player.posX > posX && (int)player.posZ < posZ){
+				return "South West";
+			}else if((int)player.posX < posX && (int)player.posZ > posZ){
+				return "North East";
+			}else if((int)player.posX < posX && (int)player.posZ < posZ){
+				return "South East";
+			}else if((int)player.posX > posX && (int)player.posZ > posZ){
+				return "North West";
+			}
+		case 1: //West
+			if((int)player.posX > posX && (int)player.posZ < posZ){
+				return "South West";
+			}else if((int)player.posX < posX && (int)player.posZ > posZ){
+				return "North East";
+			}else if((int)player.posX < posX && (int)player.posZ < posZ){
+				return "South East";
+			}else if((int)player.posX > posX && (int)player.posZ > posZ){
+				return "North West";
+			}
+		case 2: //North
+			if((int)player.posX < posX && (int)player.posZ > posZ){
+				return "North East";
+			}else if((int)player.posX > posX && (int)player.posZ < posZ){
+				return "South West";
+			}else if((int)player.posX < posX && (int)player.posZ < posZ){
+				return "South East";
+			}else if((int)player.posX > posX && (int)player.posZ > posZ){
+				return "North West";
+			}
+		case 3: //East
+			if((int)player.posX > posX && (int)player.posZ < posZ){
+				return "South West";
+			}else if((int)player.posX < posX && (int)player.posZ > posZ){
+				return "North East";
+			}else if((int)player.posX < posX && (int)player.posZ < posZ){
+				return "South East";
+			}else if((int)player.posX > posX && (int)player.posZ > posZ){
+				return "North West";
+			}
+		default:
+		}
+		return "This way";
 	}
 }
 
