@@ -75,7 +75,7 @@ public class KeybindHandler extends KeyHandler
 				}
 			}
 
-			float closest = 16F;
+			float closest = 64F;
 			Entity thisEntity;
 			String entityName;
 			for (int l = 0; l < world.loadedEntityList.size(); l++){
@@ -90,6 +90,9 @@ public class KeybindHandler extends KeyHandler
 						int entityPosY = (int)((Entity)world.loadedEntityList.get(l)).posY;
 						int entityPosZ = (int)((Entity)world.loadedEntityList.get(l)).posZ;
 						player.addChatMessage(entityName +" : "+entityPosX+","+entityPosY+","+entityPosZ);
+						NBTTagCompound compound = new NBTTagCompound();
+						thisEntity.writeToNBT(compound);
+						player.addChatMessage("" + compound.getBoolean("IsMale"));
 					}
 				}
 			}
