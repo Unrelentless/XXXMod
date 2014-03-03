@@ -1,0 +1,17 @@
+[
+{
+  "modid": "xxxmod",
+  "name": "XXX",
+  "description": "Inventory Test Mod",
+  "version": "0.0.1",
+  "mcversion": "1.6.4",
+  "logoFile": "",
+  "url": "http://www.unrelentless.com",
+  "updateUrl": "",
+  "authors": ["Unrelentless"],
+  "credits": "Unrelentless",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
