@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -104,13 +105,11 @@ public class KeybindHandler extends KeyHandler
 						player.addChatMessage("BossMode: " + compound.getShort("BossMode"));
 						 */
 						if(compound.getBoolean("IsShiny")){	
-							player.addChatMessage("Shiny " +entityName +" due: "+ checkDir(player, dir, entityPosX, entityPosZ) +"("+entityPosX+","+entityPosY+","+entityPosZ +")");
+							player.addChatMessage(EnumChatFormatting.GOLD + "Shiny " +entityName +" due: "+ checkDir(player, dir, entityPosX, entityPosZ) +"("+entityPosX+","+entityPosY+","+entityPosZ +")");
 						}else if(compound.getShort("BossMode")>0){
-							player.addChatMessage("Boss " +entityName +" due: "+ checkDir(player, dir, entityPosX, entityPosZ) +"("+entityPosX+","+entityPosY+","+entityPosZ +")");
+							player.addChatMessage(EnumChatFormatting.RED + "Boss " +entityName +" due: "+ checkDir(player, dir, entityPosX, entityPosZ) +"("+entityPosX+","+entityPosY+","+entityPosZ +")");
 						}else if(compound.getShort("Growth")==6 || compound.getShort("Growth")==0){
 							player.addChatMessage("Pygmy/Enormous " +entityName +" due: "+ checkDir(player, dir, entityPosX, entityPosZ) +"("+entityPosX+","+entityPosY+","+entityPosZ +")");
-						}else if(compound.getInteger("Level")>48){
-							player.addChatMessage("High Level " +entityName +" due: "+ checkDir(player, dir, entityPosX, entityPosZ) +"("+entityPosX+","+entityPosY+","+entityPosZ +")");
 						}
 					}
 				}
