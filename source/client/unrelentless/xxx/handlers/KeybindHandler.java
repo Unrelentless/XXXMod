@@ -88,11 +88,25 @@ public class KeybindHandler extends KeyHandler
 						entityName = ((Entity)world.loadedEntityList.get(l)).getEntityName();
 						int entityPosX = (int)((Entity)world.loadedEntityList.get(l)).posX;
 						int entityPosY = (int)((Entity)world.loadedEntityList.get(l)).posY;
-						int entityPosZ = (int)((Entity)world.loadedEntityList.get(l)).posZ;
-						player.addChatMessage(entityName +" : "+entityPosX+","+entityPosY+","+entityPosZ);
+						int entityPosZ = (int)((Entity)world.loadedEntityList.get(l)).posZ;	
 						NBTTagCompound compound = new NBTTagCompound();
 						thisEntity.writeToNBT(compound);
-						player.addChatMessage("" + compound.getBoolean("IsMale"));
+
+/*						player.addChatMessage("Growth: " + compound.getShort("Growth"));
+						player.addChatMessage("IsShiny: " + compound.getBoolean("IsShiny"));
+						player.addChatMessage("Level: " + compound.getInteger("Level"));
+						player.addChatMessage("BossMode: " + compound.getShort("BossMode"));
+*/
+						if(compound.getBoolean("IsShiny")){	
+							player.addChatMessage("Shiny " +entityName +" at "+entityPosX+","+entityPosY+","+entityPosZ);
+						}else if(compound.getShort("BossMode")>0){
+							player.addChatMessage("Boss " +entityName +" at "+entityPosX+","+entityPosY+","+entityPosZ);
+						}else if(compound.getShort("Growth")==6 || compound.getShort("Growth")==0){
+							player.addChatMessage("Pygmy/Enormous " +entityName +" at "+entityPosX+","+entityPosY+","+entityPosZ);
+						}else if(compound.getInteger("Level")>45){
+							player.addChatMessage("High Level " +entityName +" at "+entityPosX+","+entityPosY+","+entityPosZ);
+						}
+
 					}
 				}
 			}
