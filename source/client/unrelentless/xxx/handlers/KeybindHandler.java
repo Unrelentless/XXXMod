@@ -57,39 +57,40 @@ public class KeybindHandler extends KeyHandler
 		int zPos = (int)player.posZ;
 		int count = 1;
 		Iterator iterator;
+		if (FMLClientHandler.instance().getClient().inGameHasFocus){
+			for(int i=-8;i<=8; i++){
+				for(int j=-8;j<=8; j++){
+					for(int k=-8;k<=8; k++){
+						int blockID = world.getBlockId(xPos+i, yPos+j, zPos+k);
+						if(blockID == Block.oreDiamond.blockID){
+							xPos += i;
+							yPos += j;
+							zPos += k;
+							((EntityPlayer) player).addChatMessage("Diamonds at: "+xPos+","+yPos+","+zPos);
+						}else if(blockID == 4085-256 || blockID == 4085){
+							((EntityPlayer) player).addChatMessage("Fossil at: " + xPos+","+ yPos+","+zPos);
+						}
 
-		for(int i=-8;i<=8; i++){
-			for(int j=-8;j<=8; j++){
-				for(int k=-8;k<=8; k++){
-					int blockID = world.getBlockId(xPos+i, yPos+j, zPos+k);
-					if(blockID == Block.oreDiamond.blockID){
-						xPos += i;
-						yPos += j;
-						zPos += k;
-						((EntityPlayer) player).addChatMessage("Diamonds at: "+xPos+","+yPos+","+zPos);
-					}else if(blockID == 4085-256 || blockID == 4085){
-						((EntityPlayer) player).addChatMessage("Fossil at: " + xPos+","+ yPos+","+zPos);
 					}
-
 				}
 			}
-		}
 
-		float closest = 16F;
-		Entity thisEntity;
-		String entityName;
-		for (int l = 0; l < world.loadedEntityList.size(); l++){
+			float closest = 16F;
+			Entity thisEntity;
+			String entityName;
+			for (int l = 0; l < world.loadedEntityList.size(); l++){
 
-			if (((Entity)world.loadedEntityList.get(l)).getDistanceToEntity(player)<closest)
-			{
-				if (world.loadedEntityList.get(l) instanceof EntityAnimal)
+				if (((Entity)world.loadedEntityList.get(l)).getDistanceToEntity(player)<closest)
 				{
-					thisEntity = ((Entity)world.loadedEntityList.get(l));
-					entityName = ((Entity)world.loadedEntityList.get(l)).getEntityName();
-					int entityPosX = (int)((Entity)world.loadedEntityList.get(l)).posX;
-					int entityPosY = (int)((Entity)world.loadedEntityList.get(l)).posY;
-					int entityPosZ = (int)((Entity)world.loadedEntityList.get(l)).posZ;
-					player.addChatMessage(entityName +" : "+entityPosX+","+entityPosY+","+entityPosZ);
+					if (world.loadedEntityList.get(l) instanceof EntityAnimal)
+					{
+						thisEntity = ((Entity)world.loadedEntityList.get(l));
+						entityName = ((Entity)world.loadedEntityList.get(l)).getEntityName();
+						int entityPosX = (int)((Entity)world.loadedEntityList.get(l)).posX;
+						int entityPosY = (int)((Entity)world.loadedEntityList.get(l)).posY;
+						int entityPosZ = (int)((Entity)world.loadedEntityList.get(l)).posZ;
+						player.addChatMessage(entityName +" : "+entityPosX+","+entityPosY+","+entityPosZ);
+					}
 				}
 			}
 		}
