@@ -1,12 +1,15 @@
 package unrelentless.xxx.handlers;
 
 import java.util.EnumSet;
+import java.util.Iterator;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
@@ -53,6 +56,7 @@ public class KeybindHandler extends KeyHandler
 		int yPos = (int)player.posY;
 		int zPos = (int)player.posZ;
 		int count = 1;
+		Iterator iterator;
 
 		for(int i=-8;i<=8; i++){
 			for(int j=-8;j<=8; j++){
@@ -71,25 +75,24 @@ public class KeybindHandler extends KeyHandler
 			}
 		}
 
-		float closest = 64F;
-		Entity thisOne=null;
-		String entityName = "";
+		float closest = 16F;
+		Entity thisEntity;
+		String entityName;
 		for (int l = 0; l < world.loadedEntityList.size(); l++){
 
 			if (((Entity)world.loadedEntityList.get(l)).getDistanceToEntity(player)<closest)
 			{
-				if (world.loadedEntityList.get(l) instanceof EntityAnimal) //if it is a mob...
+				if (world.loadedEntityList.get(l) instanceof EntityAnimal)
 				{
-					//closest = ((Entity)world.loadedEntityList.get(l)).getDistanceToEntity(player);
-					thisOne = ((Entity)world.loadedEntityList.get(l));
+					thisEntity = ((Entity)world.loadedEntityList.get(l));
 					entityName = ((Entity)world.loadedEntityList.get(l)).getEntityName();
 					int entityPosX = (int)((Entity)world.loadedEntityList.get(l)).posX;
 					int entityPosY = (int)((Entity)world.loadedEntityList.get(l)).posY;
 					int entityPosZ = (int)((Entity)world.loadedEntityList.get(l)).posZ;
 					player.addChatMessage(entityName +" : "+entityPosX+","+entityPosY+","+entityPosZ);
-					player.addChatMessage("" + ((Entity)world.loadedEntityList.get(l)).getEntityData().getTags());
 				}
 			}
 		}
 	}
 }
+
