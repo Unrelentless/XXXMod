@@ -6,7 +6,7 @@ import cpw.mods.fml.client.registry.KeyBindingRegistry;
 
 public class KeybindHelper {
 	/** Key descriptions */
-	private static final String[] desc = {"Scan"};
+	private static final String[] desc = {"Toggle Scan"};
 
 	/** Default key values */
 	private static final int[] keyValues = {Keyboard.KEY_F};
