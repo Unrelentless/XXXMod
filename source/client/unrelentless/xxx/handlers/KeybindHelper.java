@@ -6,10 +6,10 @@ import cpw.mods.fml.client.registry.KeyBindingRegistry;
 
 public class KeybindHelper {
 	/** Key descriptions */
-	private static final String[] desc = {"Scan"};
+	private static final String[] desc = {"Scan", "Locate"};
 
 	/** Default key values */
-	private static final int[] keyValues = {Keyboard.KEY_F};
+	private static final int[] keyValues = {Keyboard.KEY_F, Keyboard.KEY_V};
 
 	/** This stores all of our key bindings and is always updated with the in-game settings */
 	public static final KeyBinding[] keys = new KeyBinding[desc.length];
@@ -23,7 +23,6 @@ public class KeybindHelper {
 			keys[i] = new KeyBinding(desc[i], keyValues[i]);
 			repeat[i] = false;
 		}
-
 		KeyBindingRegistry.registerKeyBinding(new KeybindHandler(keys, repeat));
 	}
 }
