@@ -28,7 +28,7 @@ public class KeybindHandler extends KeyHandler
 	private final int LOCATE = 1;
 
 	/** Not really important. I use it to store/find keys in the config file */
-	public static final String label = "Toggle Scan";
+	public static final String label = "XXX";
 	public KeybindHandler(KeyBinding[] keyBindings, boolean[] repeatings) {
 		super(keyBindings, repeatings);
 	}
@@ -76,7 +76,6 @@ public class KeybindHandler extends KeyHandler
 		int zPos = (int)player.posZ;
 		int dir = MathHelper.floor_double((double)((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
 
-		if (FMLClientHandler.instance().getClient().inGameHasFocus){
 			if(Config.enableSearch){
 				for(int k=-Config.xRadius;k<=Config.xRadius; k++){
 					for(int i=-Config.zRadius;i<=Config.zRadius; i++){
@@ -101,7 +100,6 @@ public class KeybindHandler extends KeyHandler
 					}
 				}
 			}
-		}
 	}
 
 	public void locateAndPrint(EntityPlayer player){
@@ -111,10 +109,8 @@ public class KeybindHandler extends KeyHandler
 		String entityName;
 
 		for (int l = 0; l < world.loadedEntityList.size(); l++){
-
 			if (world.loadedEntityList.get(l) instanceof EntityPlayer)
 			{
-
 				thisEntity = ((Entity)world.loadedEntityList.get(l));
 				entityName = ((Entity)world.loadedEntityList.get(l)).getEntityName();
 				int entityPosX = (int)((Entity)world.loadedEntityList.get(l)).posX;
