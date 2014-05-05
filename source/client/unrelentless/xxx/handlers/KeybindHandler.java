@@ -41,8 +41,9 @@ public class KeybindHandler extends KeyHandler
 		if (FMLClientHandler.instance().getClient().inGameHasFocus){
 			EntityPlayer player = FMLClientHandler.instance().getClient().thePlayer;
 			if (tickEnd && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT){
-				Config.enableSearch = !Config.enableSearch;
-				player.addChatMessage("Scanning "+ Config.enableSearch);
+				player.addChatMessage("Scanning Started");
+				scanAndPrint(player);
+				player.addChatMessage("Scanning Complete");
 			}
 		}
 	}
@@ -69,92 +70,78 @@ public class KeybindHandler extends KeyHandler
 		int dir = MathHelper.floor_double((double)((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
 
 		if (FMLClientHandler.instance().getClient().inGameHasFocus){
-			for(int i=-8;i<=8; i++){
-				for(int j=-8;j<=8; j++){
-					for(int k=-8;k<=8; k++){
-						int blockID = world.getBlockId(xPos+i, yPos+j, zPos+k);
-						if(blockID == Block.oreDiamond.blockID){
-							xPos += i;
-							yPos += j;
-							zPos += k;
-							((EntityPlayer) player).addChatMessage("Diamonds at: "+xPos+","+yPos+","+zPos);
-						}else if(blockID == Block.oreEmerald.blockID){
-							xPos += i;
-							yPos += j;
-							zPos += k;
-							((EntityPlayer) player).addChatMessage("Emeralds at: "+xPos+","+yPos+","+zPos);
-						}/*else if(blockID == 4085-256 || blockID == 4085){
-							xPos += i;
-							yPos += j;
-							zPos += k;
-							((EntityPlayer) player).addChatMessage("Fossil at: " + xPos+","+ yPos+","+zPos);
-						}*/
-					}
-				}
-			}
+			if(Config.enableSearch){
+					for(int k=-Config.xRadius;k<=Config.xRadius; k++){
+						for(int i=-Config.zRadius;i<=Config.zRadius; i++){
+							for(int j=-Config.yRadius;j<=Config.yRadius; j++){
 
-			for(int i=-32;i<=132; i++){
-				for(int j=-32;j<=32; j++){
-					for(int k=-8;k<=8; k++){
-						int blockID = world.getBlockId(xPos+i, yPos+j, zPos+k);
-						if(blockID == 2416){
-							xPos += i;
-							yPos += j;
-							zPos += k;
-							((EntityPlayer) player).addChatMessage("Node at: "+xPos+","+yPos+","+zPos);
+								int blockID = world.getBlockId(xPos+i, yPos+k, zPos+j);
+								int blockPosX = xPos+i;
+								int blockPosY = yPos+k;
+								int blockPosZ = zPos+j;
+								if(blockID == Config.search1 && Config.search1 != 0){
+									((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search1].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
+								}else if(blockID == Config.search2 && Config.search2 != 0){
+									((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search2].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
+								}else if(blockID == Config.search3 && Config.search3 != 0){
+									((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search3].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
+								}else if(blockID == Config.search4 && Config.search4 != 0){
+									((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search4].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
+								}else if(blockID == Config.search5 && Config.search5 != 0){
+									((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search5].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
+								}
+							}
 						}
 					}
 				}
 			}
 		}
 
-	}
-
-	public String checkDir(EntityPlayer player, int dir, int posX, int posZ){
-		switch(dir){
-		case 0: //South
-			if((int)player.posX > posX && (int)player.posZ < posZ){
-				return "South West";
-			}else if((int)player.posX < posX && (int)player.posZ > posZ){
-				return "North East";
-			}else if((int)player.posX < posX && (int)player.posZ < posZ){
-				return "South East";
-			}else if((int)player.posX > posX && (int)player.posZ > posZ){
-				return "North West";
+		public String checkDir(EntityPlayer player, int dir, int posX, int posZ){
+			switch(dir){
+			case 0: //South
+				if((int)player.posX > posX && (int)player.posZ < posZ){
+					return "South West";
+				}else if((int)player.posX < posX && (int)player.posZ > posZ){
+					return "North East";
+				}else if((int)player.posX < posX && (int)player.posZ < posZ){
+					return "South East";
+				}else if((int)player.posX > posX && (int)player.posZ > posZ){
+					return "North West";
+				}
+			case 1: //West
+				if((int)player.posX > posX && (int)player.posZ < posZ){
+					return "South West";
+				}else if((int)player.posX < posX && (int)player.posZ > posZ){
+					return "North East";
+				}else if((int)player.posX < posX && (int)player.posZ < posZ){
+					return "South East";
+				}else if((int)player.posX > posX && (int)player.posZ > posZ){
+					return "North West";
+				}
+			case 2: //North
+				if((int)player.posX < posX && (int)player.posZ > posZ){
+					return "North East";
+				}else if((int)player.posX > posX && (int)player.posZ < posZ){
+					return "South West";
+				}else if((int)player.posX < posX && (int)player.posZ < posZ){
+					return "South East";
+				}else if((int)player.posX > posX && (int)player.posZ > posZ){
+					return "North West";
+				}
+			case 3: //East
+				if((int)player.posX > posX && (int)player.posZ < posZ){
+					return "South West";
+				}else if((int)player.posX < posX && (int)player.posZ > posZ){
+					return "North East";
+				}else if((int)player.posX < posX && (int)player.posZ < posZ){
+					return "South East";
+				}else if((int)player.posX > posX && (int)player.posZ > posZ){
+					return "North West";
+				}
+			default:
 			}
-		case 1: //West
-			if((int)player.posX > posX && (int)player.posZ < posZ){
-				return "South West";
-			}else if((int)player.posX < posX && (int)player.posZ > posZ){
-				return "North East";
-			}else if((int)player.posX < posX && (int)player.posZ < posZ){
-				return "South East";
-			}else if((int)player.posX > posX && (int)player.posZ > posZ){
-				return "North West";
-			}
-		case 2: //North
-			if((int)player.posX < posX && (int)player.posZ > posZ){
-				return "North East";
-			}else if((int)player.posX > posX && (int)player.posZ < posZ){
-				return "South West";
-			}else if((int)player.posX < posX && (int)player.posZ < posZ){
-				return "South East";
-			}else if((int)player.posX > posX && (int)player.posZ > posZ){
-				return "North West";
-			}
-		case 3: //East
-			if((int)player.posX > posX && (int)player.posZ < posZ){
-				return "South West";
-			}else if((int)player.posX < posX && (int)player.posZ > posZ){
-				return "North East";
-			}else if((int)player.posX < posX && (int)player.posZ < posZ){
-				return "South East";
-			}else if((int)player.posX > posX && (int)player.posZ > posZ){
-				return "North West";
-			}
-		default:
+			return "This way";
 		}
-		return "This way";
 	}
-}
 
