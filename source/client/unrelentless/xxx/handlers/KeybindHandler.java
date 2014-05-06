@@ -5,12 +5,15 @@ import java.util.Iterator;
 
 import unrelentless.xxx.lib.Config;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -41,9 +44,10 @@ public class KeybindHandler extends KeyHandler
 	@Override
 	public void keyDown(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd, boolean isRepeat)
 	{
+
 		if (FMLClientHandler.instance().getClient().inGameHasFocus){
 			EntityPlayer player = FMLClientHandler.instance().getClient().thePlayer;
-			if (tickEnd && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT){
+			if (tickEnd && FMLCommonHandler.instance().getEffectiveSide().isClient()){
 				if(kb == keyBindings[SCAN]){
 					player.addChatMessage("Scanning Started");
 					scanAndPrint(player);
@@ -76,30 +80,30 @@ public class KeybindHandler extends KeyHandler
 		int zPos = (int)player.posZ;
 		int dir = MathHelper.floor_double((double)((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
 
-			if(Config.enableSearch){
-				for(int k=-Config.xRadius;k<=Config.xRadius; k++){
-					for(int i=-Config.zRadius;i<=Config.zRadius; i++){
-						for(int j=-Config.yRadius;j<=Config.yRadius; j++){
+		if(Config.enableSearch){
+			for(int k=-Config.xRadius;k<=Config.xRadius; k++){
+				for(int i=-Config.zRadius;i<=Config.zRadius; i++){
+					for(int j=-Config.yRadius;j<=Config.yRadius; j++){
 
-							int blockID = world.getBlockId(xPos+i, yPos+k, zPos+j);
-							int blockPosX = xPos+i;
-							int blockPosY = yPos+k;
-							int blockPosZ = zPos+j;
-							if(blockID == Config.search1 && Config.search1 != 0){
-								((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search1].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
-							}else if(blockID == Config.search2 && Config.search2 != 0){
-								((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search2].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
-							}else if(blockID == Config.search3 && Config.search3 != 0){
-								((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search3].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
-							}else if(blockID == Config.search4 && Config.search4 != 0){
-								((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search4].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
-							}else if(blockID == Config.search5 && Config.search5 != 0){
-								((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search5].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
-							}
+						int blockID = world.getBlockId(xPos+i, yPos+k, zPos+j);
+						int blockPosX = xPos+i;
+						int blockPosY = yPos+k;
+						int blockPosZ = zPos+j;
+						if(blockID == Config.search1 && Config.search1 != 0){
+							((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search1].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
+						}else if(blockID == Config.search2 && Config.search2 != 0){
+							((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search2].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
+						}else if(blockID == Config.search3 && Config.search3 != 0){
+							((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search3].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
+						}else if(blockID == Config.search4 && Config.search4 != 0){
+							((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search4].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
+						}else if(blockID == Config.search5 && Config.search5 != 0){
+							((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search5].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
 						}
 					}
 				}
 			}
+		}
 	}
 
 	public void locateAndPrint(EntityPlayer player){
@@ -107,9 +111,10 @@ public class KeybindHandler extends KeyHandler
 		float closest = 64F;
 		Entity thisEntity;
 		String entityName;
+		int[] location = new int[3];
 
 		for (int l = 0; l < world.loadedEntityList.size(); l++){
-			if (world.loadedEntityList.get(l) instanceof EntityPlayer)
+			if (world.loadedEntityList.get(l) instanceof EntityCreature && !((Entity)world.loadedEntityList.get(l)).getEntityName().equalsIgnoreCase("unknown"))
 			{
 				thisEntity = ((Entity)world.loadedEntityList.get(l));
 				entityName = ((Entity)world.loadedEntityList.get(l)).getEntityName();
