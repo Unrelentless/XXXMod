@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
@@ -113,8 +114,10 @@ public class KeybindHandler extends KeyHandler
 		String entityName;
 		int[] location = new int[3];
 
+		//Loop through all currently loaded entities.
 		for (int l = 0; l < world.loadedEntityList.size(); l++){
-			if (world.loadedEntityList.get(l) instanceof EntityCreature && !((Entity)world.loadedEntityList.get(l)).getEntityName().equalsIgnoreCase("unknown"))
+			//Narrow down the entities to display to only creatures.
+			if (world.loadedEntityList.get(l) instanceof EntityLiving && !((Entity)world.loadedEntityList.get(l)).getEntityName().equalsIgnoreCase("unknown"))
 			{
 				thisEntity = ((Entity)world.loadedEntityList.get(l));
 				entityName = ((Entity)world.loadedEntityList.get(l)).getEntityName();
