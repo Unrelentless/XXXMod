@@ -1,23 +1,21 @@
 package unrelentless.xxx.handlers;
 
 import java.util.EnumSet;
-import java.util.Iterator;
 
-import unrelentless.xxx.lib.Config;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.inventory.ContainerPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import unrelentless.xxx.lib.Config;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -30,7 +28,10 @@ public class KeybindHandler extends KeyHandler
 {
 	private final int SCAN = 0;
 	private final int LOCATE = 1;
-
+	private final int INV = 2;
+	private ItemStack[] playerInv = new ItemStack[9];
+	Minecraft mc;
+	
 	/** Not really important. I use it to store/find keys in the config file */
 	public static final String label = "XXX";
 	public KeybindHandler(KeyBinding[] keyBindings, boolean[] repeatings) {
@@ -86,10 +87,10 @@ public class KeybindHandler extends KeyHandler
 				for(int i=-Config.zRadius;i<=Config.zRadius; i++){
 					for(int j=-Config.yRadius;j<=Config.yRadius; j++){
 
-						int blockID = world.getBlockId(xPos+i, yPos+k, zPos+j);
-						int blockPosX = xPos+i;
-						int blockPosY = yPos+k;
-						int blockPosZ = zPos+j;
+						int blockID = world.getBlockId(xPos+k, yPos+j, zPos+i);
+						int blockPosX = xPos+k;
+						int blockPosY = yPos+j;
+						int blockPosZ = zPos+i;
 						if(blockID == Config.search1 && Config.search1 != 0){
 							((EntityPlayer) player).addChatMessage(Block.blocksList[Config.search1].getLocalizedName()+" at: "+blockPosX+","+blockPosY+","+blockPosZ);
 						}else if(blockID == Config.search2 && Config.search2 != 0){
@@ -124,12 +125,30 @@ public class KeybindHandler extends KeyHandler
 				int entityPosX = (int)((Entity)world.loadedEntityList.get(l)).posX;
 				int entityPosY = (int)((Entity)world.loadedEntityList.get(l)).posY;
 				int entityPosZ = (int)((Entity)world.loadedEntityList.get(l)).posZ;	
-				if(thisEntity != player){
+				if(!thisEntity.getEntityName().equals(player.getEntityName())){
 					player.addChatMessage(entityName+" is at: ("+entityPosX+","+entityPosY+","+entityPosZ+")");
 				}
 			}
 		}
 	}
+
+	public void saveInv(EntityPlayer player){
+
+		for(int i=0;i<=8;i++){
+			playerInv[i] = player.inventory.getStackInSlot(i);
+		}
+	}
+
+	public void loadInv(EntityPlayer player){
+		for(int j=0;j<=8;j++){
+			for(int i=0;i<=player.inventory.getSizeInventory();i++){
+				if(player.inventory.getStackInSlot(i)==playerInv[j]){
+					mc.playerController.windowClick(player.inventoryContainer.windowId, j, 0, 1, player);
+				}
+			}
+		}
+	}
+
 	public String checkDir(EntityPlayer player, int dir, int posX, int posZ){
 		switch(dir){
 		case 0: //South
